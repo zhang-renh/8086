@@ -49,7 +49,7 @@ SEGTAB  DB 3FH	; 7-Segment Tube, 共阴极类型的7段数码管示意图
 		DB 07H	;         e         c
 		DB 7FH	;         e         c
 		DB 6FH	;         e         c
-        DB 77H	;            d d d     h h h
+		DB 77H	;            d d d     h h h
 		DB 7CH	; ----------------------------------
 		DB 39H	;       b7 b6 b5 b4 b3 b2 b1 b0
 		DB 5EH	;       DP  g  f  e  d  c  b  a
@@ -66,37 +66,38 @@ SEGTAB  DB 3FH	; 7-Segment Tube, 共阴极类型的7段数码管示意图
 ; Init 8255 in Mode 0
 ; PortA Output, PortB Output
 ;
-		MOV AL,10000000B
+		MOV AL,10001001B
 		OUT CtrlPT,AL	;
 ;
 ; 把数字1、2、3、4显示在数码管上
 ;
 
 L1: 
-		MOV AL,  0FEh
+		IN AL,PortC
+		MOV BL,AL
+		AND AL,0F0H
+		MOV AH,AL
+		ADD AL,1110B
 		OUT PortA,AL
-		MOV AL,SEGTAB
+		
+		MOV DL,BL
+		MOV CL,4
+		SHR BL,CL
+		MOV AL,BL
+		MOV BX,OFFSET SEGTAB
+		XLAT
 		OUT PortB,AL
 		CALL DELAY			; ？？？ 此处为何需要调研DELAY子程序？
-
-		MOV AL, 0FDh
+		
+		MOV AL,00001101B
+		ADD AL,AH
 		OUT PortA,AL
-		MOV AL,SEGTAB + 1
+		AND DL,0FH
+		MOV AL,DL
+		MOV BX,OFFSET SEGTAB
+		XLAT
 		OUT PortB,AL
-		CALL DELAY			; ？？？Delay程序的延时对演示时的什么方面会产生影响？
-
-		MOV AL, 0FBh 
-		OUT PortA,AL
-		MOV AL,SEGTAB + 2
-		OUT PortB,AL
-		CALL DELAY
-
-		MOV AL, 0F7h
-		OUT PortA,AL
-		MOV AL,SEGTAB + 3
-		OUT PortB,AL
-		CALL DELAY
-
+		CALL DELAY	
 		JMP L1
 
 RET

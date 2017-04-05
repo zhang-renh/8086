@@ -54,7 +54,7 @@ SEGTAB  DB 3FH	; 7-Segment Tube, 共阴极类型的7段数码管示意图
 		DB 39H	;       b7 b6 b5 b4 b3 b2 b1 b0
 		DB 5EH	;       DP  g  f  e  d  c  b  a
 		DB 79H	;
-		DB 71H	;
+		DB 7EH	;
 
 
 ;-----------------------------------------------------------
